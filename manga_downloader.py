@@ -9,14 +9,11 @@ import pyinputplus as pypi
 
 def manga():
     user=input("\nGive us the link of the manga you want(from this website (https://manganelo.com)):\n")#Link for manga
-    while True:
-        if not user.startswith('https://chap.manganelo.com'):
-            makeSure=input('\nMake sure you get the link from this website(https://manganelo.com)or make sure if you choosed the manga you want:\n')
-            if makeSure.startswith('https://chap.manganelo.com'):
-                user=makeSure
+    if not user.startswith('https://manganelo.com/'):
+        while True:
+            warningLink=input('\nPlease make sure that you used this link(https://manganelo.com/manga/)to choose your manga/or make sure you choose a manga anyway:\n ')
+            if warningLink.startswith('https://manganelo.com/manga/') or user.startswith('https://manganelo.com/chapter/'):
                 break
-        else:
-            break
 
 
     while True:
@@ -43,7 +40,9 @@ def manga():
         os.makedirs(f'C:\\Users\\Administrator\\Desktop\\manga\\{folderName}')#The folder which will contain the manga files and chapters folders
     except:
         pass
-    link=user+f'/chapter-{chStart}'#create the link which request will go for
+    replaceLink=user.replace('/manga/','/chapter/',1)
+    link=replaceLink+f'/chapter_{chStart}/'#create the link which request will go for
+    print(link)
     if not chEnd:#If user did't choose an end chapter
         while True:#This allow us to go for another chapter
                 res=requests.get(link)
@@ -67,7 +66,7 @@ def manga():
                         animeFile.write(chunk)
                     animeFile.close()
                 print(f'Chapter{ch} Is Done')
-                nextElem=soup.select('body > div.body-site > div:nth-child(4) > div.panel-navigation > div > a.navi-change-chapter-btn-next.a-h')#Get the css selector for the next button
+                nextElem=soup.select('a.navi-change-chapter-btn-next')#Get the css selector for the next button
                 try:
                     href=nextElem[0].get('href')#Link for the next chapter
                 except IndexError:
@@ -79,8 +78,7 @@ def manga():
                 checkerLink=os.path.dirname(link)
                 checkerPrev=os.path.dirname(previous_link)
                 chStart+=1#This is needed to name chapters
-                if checkerLink!=checkerPrev:
-                    break
+
         print('Thanks for using this app')
     if chEnd:#if user choose an end chapter
         fullRange=chEnd-chStart
@@ -106,11 +104,12 @@ def manga():
                     animeFile.write(chunk)
                 animeFile.close()
             print(f'Chapter{ch} Is Done')
-            nextElem=soup.select('body > div.body-site > div:nth-child(4) > div.panel-navigation > div > a.navi-change-chapter-btn-next.a-h')#Get the css selector for the next button
+            nextElem=soup.select('a.navi-change-chapter-btn-next')
+
             try:
                 href=nextElem[0].get('href')#Link for the next chapter
             except IndexError:
-                print(f'Its seems like there is no Chapter {ch} or {ch+1}')
+                print(f'\nSeems like theres an error in you code... try this:\n1-Make sure you choosed to start from a vaild chapter. example:you choosed chapter 0 and the manga starts from chapter 1\n2-Make sure that the link you put is a link for normal manga page(The page that you see from  info for the manga).\n3-Sometimes there is no error in your link just the program didnt found another chapter so its stopped(that usually happen when you dont put an end chapter so its normal dont worry).')
                 break
 
 
@@ -119,13 +118,8 @@ def manga():
             checkerLink=os.path.dirname(link)
             checkerPrev=os.path.dirname(previous_link)
             ch+=1#This is needed to name chapters
-            if checkerLink!=checkerPrev:
-                break
+            
 
         print('Thanks for using this app')
-
-
-
-
-
+        
 manga()
