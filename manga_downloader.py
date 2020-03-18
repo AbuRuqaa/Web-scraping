@@ -42,7 +42,7 @@ def manga():
         pass
     replaceLink=user.replace('/manga/','/chapter/',1)
     link=replaceLink+f'/chapter_{chStart}/'#create the link which request will go for
-    print(link)
+    
     if not chEnd:#If user did't choose an end chapter
         while True:#This allow us to go for another chapter
                 res=requests.get(link)
@@ -65,7 +65,7 @@ def manga():
                     for chunk in res.iter_content(100000):#File download
                         animeFile.write(chunk)
                     animeFile.close()
-                print(f'Chapter{ch} Is Done')
+                print(f'Chapter {ch} Is Done')
                 nextElem=soup.select('a.navi-change-chapter-btn-next')#Get the css selector for the next button
                 try:
                     href=nextElem[0].get('href')#Link for the next chapter
@@ -103,7 +103,7 @@ def manga():
                 for chunk in res.iter_content(100000):#File download
                     animeFile.write(chunk)
                 animeFile.close()
-            print(f'Chapter{ch} Is Done')
+            print(f'Chapter {ch} Is Done')
             nextElem=soup.select('a.navi-change-chapter-btn-next')
 
             try:
