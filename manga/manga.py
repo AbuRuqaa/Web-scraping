@@ -12,11 +12,11 @@ def manga():
     if not user.startswith('https://manganelo.com/'):
         while True:
             warningLink=input('\nPlease make sure that you used this link(https://manganelo.com/manga/)to choose your manga/or make sure you choose a manga anyway:\n ')
-            if warningLink.startswith('https://manganelo.com/manga/') or user.startswith('https://manganelo.com/chapter/'):
+            if warningLink.startswith('https://manganelo.com/manga/'):
                 break
 
 
-    while True:
+    while True:#Make sure that the user will enter a number or a nothing but not string
         try:
             chStart=int(input('\nFrom which chapter do you want to start?:\n'))#need this to go the ordered chapter of the manga
 
@@ -42,7 +42,7 @@ def manga():
         pass
     replaceLink=user.replace('/manga/','/chapter/',1)
     link=replaceLink+f'/chapter_{chStart}/'#create the link which request will go for
-    
+
     if not chEnd:#If user did't choose an end chapter
         while True:#This allow us to go for another chapter
                 res=requests.get(link)
@@ -70,7 +70,7 @@ def manga():
                 try:
                     href=nextElem[0].get('href')#Link for the next chapter
                 except IndexError:
-                    print(f'Its seems like there is no Chapter {ch+1} or {ch+1}')
+                    print(f'\nSeems like theres an error in you code... try this:\n1-Make sure you choosed to start from a vaild chapter. example:you choosed chapter 0 and the manga starts from chapter 1\n2-Make sure that the link you put is a link for normal manga page(The page that you see from  info for the manga).\n3-Sometimes there is no error in your link just the program didnt found another chapter so its stopped(that usually happen when you dont put an end chapter so its normal dont worry).')
                     break
 
                 previous_link=link
@@ -118,8 +118,9 @@ def manga():
             checkerLink=os.path.dirname(link)
             checkerPrev=os.path.dirname(previous_link)
             ch+=1#This is needed to name chapters
-            
+
 
         print('Thanks for using this app')
+
         
 manga()
