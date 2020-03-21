@@ -1,3 +1,6 @@
+#!python3
+#imgur.py-Scrape photos from imgur website
+
 def imgur():
     global imgurName,imgurFullLink,imgurFoldersName,imgurNumber,imgurFilesName,imgurImageName
 
@@ -65,7 +68,7 @@ def rename():
     while os.path.exists(imgurFileNewname):#if file name already exsits (like if the user downloaded the pic before)
         x+=1#add 1 to x until it be bigger than the last file name
         try:
-            fileNewname=path(f'C:\\Users\\Administrator\\Desktop\\pic_downloader\\imgur\\{imgurFoldersName}')/f'{imgurFilesName}{x}{imgurFileType}'#trying to create a new file name that is not used before by adding 1to x value
+            imgurFileNewname=path(f'C:\\Users\\Administrator\\Desktop\\pic_downloader\\imgur\\{imgurFoldersName}')/f'{imgurFilesName}{x}{imgurFileType}'#trying to create a new file name that is not used before by adding 1to x value
 
 
         except:
@@ -77,3 +80,6 @@ def rename():
     os.rename(f'C:\\Users\\Administrator\\Desktop\\pic_downloader\\imgur\\{os.path.basename(imgurFullLink)}',imgurFileNewname)
 
     x+=1
+    
+    
+imgur()
