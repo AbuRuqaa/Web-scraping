@@ -1,12 +1,3 @@
-#!python3
-#Scrape_the_web.py scrape what ever you want
-
-import requests,os
-from bs4 import BeautifulSoup as bs
-from pathlib import Path as path
-import pyinputplus as pypi
-
-
 def manga():
     user=input("\nGive us the link of the manga you want(from this website (https://manganelo.com)):\n")#Link for manga
     if not user.startswith('https://manganelo.com/'):
@@ -25,14 +16,18 @@ def manga():
             continue
         if chStart:
             break
+        
         if not chStart:
             break
+    
     ch=chStart
+    
     try:
         chEnd=int(input(f"\nYou want to download from chapter{chStart} to? or if you want to download all after don't type anything:\n"))
     except ValueError:
         chEnd=False
         pass
+    
     folderName=input('\nGive us a name to the manga folder you want to download:\n')
 
 
@@ -40,7 +35,9 @@ def manga():
         os.makedirs(f'C:\\Users\\Administrator\\Desktop\\manga\\{folderName}')#The folder which will contain the manga files and chapters folders
     except:
         pass
+    
     replaceLink=user.replace('/manga/','/chapter/',1)
+    
     link=replaceLink+f'/chapter_{chStart}/'#create the link which request will go for
 
     if not chEnd:#If user did't choose an end chapter
@@ -73,10 +70,8 @@ def manga():
                     print(f'\nSeems like theres an error in you code... try this:\n1-Make sure you choosed to start from a vaild chapter. example:you choosed chapter 0 and the manga starts from chapter 1\n2-Make sure that the link you put is a link for normal manga page(The page that you see from  info for the manga).\n3-Sometimes there is no error in your link just the program didnt found another chapter so its stopped(that usually happen when you dont put an end chapter so its normal dont worry).')
                     break
 
-                previous_link=link
+                
                 link=href
-                checkerLink=os.path.dirname(link)
-                checkerPrev=os.path.dirname(previous_link)
                 chStart+=1#This is needed to name chapters
 
         print('Thanks for using this app')
@@ -104,23 +99,17 @@ def manga():
                     animeFile.write(chunk)
                 animeFile.close()
             print(f'Chapter {ch} Is Done')
-            nextElem=soup.select('a.navi-change-chapter-btn-next')
+            nextElem=soup.select('a.navi-change-chapter-btn-next')#Get the Element for the next button
 
             try:
                 href=nextElem[0].get('href')#Link for the next chapter
             except IndexError:
                 print(f'\nSeems like theres an error in you code... try this:\n1-Make sure you choosed to start from a vaild chapter. example:you choosed chapter 0 and the manga starts from chapter 1\n2-Make sure that the link you put is a link for normal manga page(The page that you see from  info for the manga).\n3-Sometimes there is no error in your link just the program didnt found another chapter so its stopped(that usually happen when you dont put an end chapter so its normal dont worry).')
                 break
-
-
-            previous_link=link
             link=href
-            checkerLink=os.path.dirname(link)
-            checkerPrev=os.path.dirname(previous_link)
             ch+=1#This is needed to name chapters
 
 
         print('Thanks for using this app')
 
-        
-manga()
+magna()
