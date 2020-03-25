@@ -49,12 +49,12 @@ def manga():
     
     if not chEnd:#If user did't choose an end chapter
         while True:#This allow us to go for another chapter 
-                nameRegex=re.compile(r'chapter_\w+\.?\d+|\d/')#Get the chapter name/number
-
+                nameRegex=re.compile(r'chapter_\w+\.?\w*/?')#Get the chapter name/number
+                print(link)
                 regexFind=nameRegex.search(link).group()
                 
                 fullName=regexFind.replace('/','')#Get the full name of the chapter
-                
+                print(regexFind)
                 res=requests.get(link)
                 res.raise_for_status()
                 soup=bs(res.text,'html.parser')
@@ -92,48 +92,51 @@ def manga():
                
         print('Thanks for using this app')
     if chEnd:#if user choose an end chapter
-        nameRegex=re.compile(r'chapter_\w+\.?\d+|\d/')
-
-        regexFind=nameRegex.search(link).group()
-
-        fullName=regexFind.replace('/','') 
+        
 
         fullRange=chEnd-chStart
         for i in range(int(fullRange+1)):
-            baseName=os.path.basename(link)
+            nameRegex=re.compile(r'chapter_\w+\.?\w*/?')
+
+            regexFind=nameRegex.search(link).group()
+
+            fullName=regexFind.replace('/','') 
             res=requests.get(link)
             res.raise_for_status()
             soup=bs(res.text,'html.parser')
 
             imgElem=soup.select('body > div.body-site > div.container-chapter-reader > img')#Get the css selector for the manga image
-            try:
-                os.makedirs(f'C:\\Users\\Administrator\\Desktop\\manga\\{folderName}\\{fullName}')#create the chapter file
-            except FileExistsError:
-                pass
-               
+            if not os.path.exists(f'C:\\Users\\Administrator\\Desktop\\manga\\{folderName}\\{fullName}'):
+                        os.makedirs(f'C:\\Users\\Administrator\\Desktop\\manga\\{folderName}\\{fullName}')  #create the chapter file  
+        
             for i in range(len(imgElem)):#Page loop
+
+                   
                 src=imgElem[i].get('src')
                 fullLink=src
                 res=requests.get(fullLink)
-               
-                animeFile=open(os.path.join(f'C:\\Users\\Administrator\\Desktop\\manga\\{folderName}\\{fullName}',os.path.basename(fullLink)),'wb')#file name
-
-                print(f'Downloading  {fullLink}')
+            
+                animeFile=open(os.path.join(f'C:\\Users\\Administrator\\Desktop\\manga\\{folderName}\\{fullName}',os.path.basename(fullLink)),'wb+')#file name
+                   
+                print(f'\nDownloading  {fullLink}')
                 for chunk in res.iter_content(100000):#File download
                     animeFile.write(chunk)
                 animeFile.close()
+            
             print(f'\n{fullName} Is Done\n')
-            nextElem=soup.select('a.navi-change-chapter-btn-next')
-
+            nextElem=soup.select('a.navi-change-chapter-btn-next')#Get the css selector for the next button
             try:
                 href=nextElem[0].get('href')#Link for the next chapter
             except IndexError:
                 print(f'\nSeems like theres an error in you code... try this:\n1-Make sure you choosed to start from a vaild chapter. example:you choosed chapter 0 and the manga starts from chapter 1\n2-Make sure that the link you put is a link for normal manga page(The page that you see from  info for the manga).\n3-Sometimes there is no error in your link just the program didnt found another chapter so its stopped(that usually happen when you dont put an end chapter so its normal dont worry).')
                 break
+
+                
             link=href
            
 
 
         print('Thanks for using this app')
+
         
 manga()
