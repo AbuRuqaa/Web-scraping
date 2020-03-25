@@ -1,3 +1,4 @@
+
 import requests,os
 from bs4 import BeautifulSoup as bs
 from pathlib import Path as path
@@ -50,11 +51,9 @@ def manga():
     if not chEnd:#If user did't choose an end chapter
         while True:#This allow us to go for another chapter 
                 nameRegex=re.compile(r'chapter_\w+\.?\w*/?')#Get the chapter name/number
-                print(link)
+              
                 regexFind=nameRegex.search(link).group()
-                
                 fullName=regexFind.replace('/','')#Get the full name of the chapter
-                print(regexFind)
                 res=requests.get(link)
                 res.raise_for_status()
                 soup=bs(res.text,'html.parser')
@@ -96,7 +95,7 @@ def manga():
 
         fullRange=chEnd-chStart
         for i in range(int(fullRange+1)):
-            nameRegex=re.compile(r'chapter_\w+\.?\w*/?')
+            nameRegex=re.compile(r'chapter_\w+\.?\w*/?')#Get the chapter name
 
             regexFind=nameRegex.search(link).group()
 
@@ -111,7 +110,6 @@ def manga():
         
             for i in range(len(imgElem)):#Page loop
 
-                   
                 src=imgElem[i].get('src')
                 fullLink=src
                 res=requests.get(fullLink)
