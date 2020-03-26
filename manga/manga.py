@@ -1,4 +1,7 @@
 
+#!python3
+#Scrape_the_web.py scrape what ever you want
+
 import requests,os
 from bs4 import BeautifulSoup as bs
 from pathlib import Path as path
@@ -11,8 +14,11 @@ def manga():
     if not user.startswith('https://manganelo.com/'):
         while True:
             warningLink=input('\nPlease make sure that you used this link(https://manganelo.com/manga/)to choose your manga/or make sure you choose a manga anyway:\n ')
+            
             if warningLink.startswith('https://manganelo.com/manga/'):
+                user=warningLink
                 break
+
 
 
     while True:#Make sure that the user will enter a number or a nothing but not string
@@ -91,10 +97,15 @@ def manga():
                
         print('Thanks for using this app')
     if chEnd:#if user choose an end chapter
-        
+        while True:
+            ChapterRegex=re.compile(r'chapter_\w+\.?\w*/?')
+            chapterSearch=ChapterRegex.search(link).group()
+            numberRegex=re.compile(r'\d+')
+            getNumber=numberRegex.search(chapterSearch).group()
+            chapter_number=int(getNumber)
+            print(chapter_number)
+            
 
-        fullRange=chEnd-chStart
-        for i in range(int(fullRange+1)):
             nameRegex=re.compile(r'chapter_\w+\.?\w*/?')#Get the chapter name
 
             regexFind=nameRegex.search(link).group()
@@ -131,10 +142,10 @@ def manga():
 
                 
             link=href
-           
+            if chEnd==chapter_number:
+                break       
 
 
         print('Thanks for using this app')
-
         
 manga()
